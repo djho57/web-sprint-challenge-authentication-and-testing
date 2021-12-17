@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { jwtSecret } = require('../../config/secretjs')
+const { jwtSecret } = require('../../config/secret')
 
 module.exports = function(user) {
     const payload = {
