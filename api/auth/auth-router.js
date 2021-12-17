@@ -9,7 +9,7 @@ const {
   checkLoginPayload,
 } = require('../middleware/auth-middleware')
 
-router.post('/api/auth/register', checkPayload, uniqueUsername, (req, res, next) => {
+router.post('/register', checkPayload, uniqueUsername, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -45,7 +45,7 @@ router.post('/api/auth/register', checkPayload, uniqueUsername, (req, res, next)
       .catch(next)
 });
 
-router.post('/api/auth/login', checkPayload, checkLoginPayload, (req, res, next) => {
+router.post('/login', checkPayload, checkLoginPayload, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.

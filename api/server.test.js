@@ -1,7 +1,18 @@
 // Write your tests here
 const request = require('supertest')
-// const db = require('../data/dbConfig') 
+const db = require('../data/dbConfig')
 const server = require('./server')
+
+beforeAll(async () => {
+  await db.migrate.rollback();
+  await db.migrate.latest();
+});
+beforeEach(async () => {
+  await db("users").truncate();
+});
+afterAll(async () => {
+  await db.destroy();
+});
 
 test('sanity', () => {
   expect(true).toBe(true)
@@ -12,15 +23,15 @@ test('is the correct environment', () => {
 })
 
 describe('[POST] /register', () => {
-  test('responds with error when no username', async () => {
-    const res = await (await request(server).post('/api/auth/register')).send({
-      username: '',
+  test('responds with username and password when info entered correctly', async () => {
+    const res = await request(server).post('/api/auth/register').send({
+      username: 'jimmy',
       password: 'abcd',
     })
-    expect(res.body).toMatchObject({message: 'username and password required'})
+    expect(res.body).toMatchObject({username: 'jimmy'})
   })
-  test('responds with error when no password', async () => {
-    const res = await (await request(server).post('/api/auth/register')).send({
+  test('responds with error when missing username', async () => {
+    const res = await request(server).post('/api/auth/register').send({
       username: 'jim',
       password: '',
     })
@@ -34,10 +45,10 @@ describe('[POST] /login', () => {
       username: '',
       password: 'abcd'
     })
-    expect (res.status).toBe(404)
+    expect(res.status).toBe(404)
   })
   test('responds with error when no password', async () => {
-    const res = await request(server).post('/login').send({
+    const res = await request(server).post('/api/auth/login').send({
       username: 'jimmy',
       password: ''
     })
